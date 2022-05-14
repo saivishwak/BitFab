@@ -1,0 +1,10 @@
+.vscode
+#ignore build files
+bin
+build
+vendor/protobuf-3.19.4/install
+vendor/protobuf-3.19.4/src/.deps
+vendor/protobuf-3.19.4/src/.libs
+
+vendor/jsoncpp/build
+vendor/spdlog/build

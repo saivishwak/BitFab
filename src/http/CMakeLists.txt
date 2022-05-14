@@ -1,0 +1,5 @@
+get_filename_component(PROJ_DIR ../../ ABSOLUTE)
+include_directories(../message ../net ../utils ${PROJ_DIR}/vendor/spdlog/include)
+add_library(http HttpServer.cpp HttpServer.h)
+target_include_directories(http PUBLIC .)
+target_link_libraries(http message net utils "${PROJ_DIR}/vendor/spdlog/build/libspdlog.a")
