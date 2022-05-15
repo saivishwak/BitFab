@@ -4,20 +4,3 @@ bin
 build
 
 src/proto/models/*.pb.*
-
-vendor/jsoncpp/build
-vendor/spdlog/build
-
-vendor/protobuf/install
-vendor/protobuf/src/**/*.o
-vendor/protobuf/src/**/*.lo
-vendor/protobuf/src/.deps
-vendor/protobuf/src/.libs
-vendor/protobuf/third_party/**/.deps
-vendor/protobuf/third_party/**/.libs
-vendor/protobuf/third_party/**/autom4te.cache
-vendor/protobuf/src/google/protobuf/.deps
-vendor/protobuf/src/google/protobuf/.libs
-vendor/protobuf/third_party/googletest/autom4te.cache
-vendor/protobuf/third_party/googletest/googletest/autom4te.cache
-vendor/protobuf/third_party/googletest/googlemock/autom4te.cache

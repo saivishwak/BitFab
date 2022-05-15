@@ -20,16 +20,16 @@ make
 echo "*** Make for protobuf ****"
 cd $CURRDIR/vendor/protobuf
 make clean
-rm -rf ./install
-mkdir install
+rm -rf ./.build
+mkdir .build
 ./autogen.sh
-./configure --with-protoc=protoc --prefix=${PWD}/install/
+./configure --with-protoc=protoc --prefix=${PWD}/.build/
 make install
 cd $CURRDIR
 
 rm ./src/proto/models/*.pb.*
 echo "*** Compiling protobuff files using the protoc compiler from vendor ***"
-$CURRDIR/vendor/protobuf/install/bin/protoc --proto_path=$CURRDIR/src/proto $CURRDIR/src/proto/*.proto --cpp_out=$CURRDIR/src/proto/models/
+$CURRDIR/vendor/protobuf/.build/bin/protoc --proto_path=$CURRDIR/src/proto $CURRDIR/src/proto/*.proto --cpp_out=$CURRDIR/src/proto/models/
 
 echo "*** Removing any existing build folder ***"
 rm -rf ./build/
