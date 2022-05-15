@@ -18,7 +18,7 @@ cd build
 make
 
 echo "*** Make for protobuf ****"
-cd $CURRDIR/vendor/protobuf-3.19.4
+cd $CURRDIR/vendor/protobuf
 make clean
 rm -rf ./install
 mkdir install
@@ -29,7 +29,7 @@ cd $CURRDIR
 
 rm ./src/proto/models/*
 echo "*** Compiling protobuff files using the protoc compiler from vendor ***"
-$CURRDIR/vendor/protobuf-3.19.4/install/bin/protoc --proto_path=$CURRDIR/src/proto $CURRDIR/src/proto/*.proto --cpp_out=$CURRDIR/src/proto/models/
+$CURRDIR/vendor/protobuf/install/bin/protoc --proto_path=$CURRDIR/src/proto $CURRDIR/src/proto/*.proto --cpp_out=$CURRDIR/src/proto/models/
 
 echo "*** Removing any existing build folder ***"
 rm -rf ./build/

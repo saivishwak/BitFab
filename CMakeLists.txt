@@ -17,7 +17,7 @@ add_subdirectory(./vendor/spdlog)
 
 set(CMAKE_CXX_FLAGS "-pthread -DBUILD_STATIC_LIBS=ON")
 set(Protobuf_USE_STATIC_LIBS ON)
-list(APPEND CMAKE_PREFIX_PATH ./vendor/protobuf-3.19.4/install)
+list(APPEND CMAKE_PREFIX_PATH ./vendor/protobuf/install)
 find_package(Protobuf REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
 
