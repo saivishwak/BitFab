@@ -2,6 +2,8 @@
 
 BitFab is a P2P decentralized blockchain.
 
+Under Development...
+
 # Installation
 
 Make sure you have the following tools installed on your system:
