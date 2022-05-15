@@ -3,6 +3,8 @@
 bin
 build
 
+src/proto/models/*.pb.*
+
 vendor/jsoncpp/build
 vendor/spdlog/build
 
