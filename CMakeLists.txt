@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_COMPILER "g++")
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 
 project(bitfab LANGUAGES CXX VERSION 1.0)
 
@@ -18,8 +18,10 @@ add_subdirectory(./vendor/spdlog)
 set(CMAKE_CXX_FLAGS "-pthread -DBUILD_STATIC_LIBS=ON")
 set(Protobuf_USE_STATIC_LIBS ON)
 list(APPEND CMAKE_PREFIX_PATH ./vendor/protobuf/.build)
+set(PROTOBUFF_INCLUDE ./vendor/protobuf/.build/include)
 find_package(Protobuf REQUIRED)
-include_directories(${Protobuf_INCLUDE_DIRS})
+#include_directories(${Protobuf_INCLUDE_DIRS})
+include_directories(${PROTOBUFF_INCLUDE})
 
 file(GLOB PROTO_CC "./src/proto/models/*.cc")
 file(GLOB PROTO_H "./src/proto/models/*.h")

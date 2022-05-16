@@ -5,9 +5,9 @@ find_package(Protobuf REQUIRED)
 #include_directories(${Protobuf_INCLUDE_DIRS})
 #protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ../proto/Block.proto)
 
-#set(PROTOBUFF_INCLUDE ${PROJ_DIR}/vendor/protobuf/.build/include)
+set(PROTOBUFF_INCLUDE ${PROJ_DIR}/vendor/protobuf/.build/include)
 set(PROTOBUFF_LIB ${PROJ_DIR}/vendor/protobuf/.build/lib/libprotobuf.a)
-include_directories(${PROJ_DIR}/vendor/jsoncpp/include ${PROJ_DIR}/vendor/spdlog/include ${Protobuf_INCLUDE_DIRS} ../proto/models)
+include_directories(${PROJ_DIR}/vendor/jsoncpp/include ${PROJ_DIR}/vendor/spdlog/include ${PROTOBUFF_INCLUDE} ../proto/models)
 add_library(message Message.cpp Message.hpp)
 target_include_directories(message PUBLIC .)
 

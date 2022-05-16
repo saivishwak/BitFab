@@ -23,7 +23,7 @@ make clean
 rm -rf ./.build
 mkdir .build
 ./autogen.sh
-./configure --with-protoc=protoc --prefix=${PWD}/.build/
+./configure --with-protoc=$CURRDIR/vendor/protobuf/.build/bin/protoc --prefix=${PWD}/.build/
 make install
 cd $CURRDIR
 
