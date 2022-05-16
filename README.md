@@ -3,6 +3,7 @@
 BitFab is a P2P decentralized blockchain.
 
 Under Development...
+Please go to [Notion Plan Page](https://simple-lettuce-0e3.notion.site/9153326b1c794e15b1051562fcd4ee93?v=284d2c9a725642ff8cdf314f54310cb0) for project status.
 
 # Installation
 
