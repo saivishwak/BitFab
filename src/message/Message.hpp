@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include "Block.hpp"
+#include <json/json.h>
 
 namespace msg {
 
@@ -27,5 +28,6 @@ namespace msg {
         static std::string marshall(std::string message, std::string type);
         static std::string marshall(std::string message, std::string type, std::vector<int> peers);
         static Block unmarshall(std::string buffer);
+        static Json::Value unmarshall(std::string buffer, int type);
     };
 }

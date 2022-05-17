@@ -49,14 +49,8 @@ int main(int argc, char* argv[]) {
     int portNum = constants->rootNode["p2pDefaultPort"].asInt();
     const unsigned int backLog = 8;  // number of connections allowed on the incoming queue
     net::P2PServer* P2pServer = new net::P2PServer(portNum, backLog);
-
-    //http::HttpServer* httpServer = new http::HttpServer(AF_INET, SOCK_STREAM, 0 , constants->rootNode["httpDefaultPort"].asInt(), INADDR_ANY, 50);
-
     std::thread p2pServerThread = P2pServer->spawnStart();
     p2pServerThread.detach();
-
-    //std::thread HttpServerThread = httpServer->spawnStart();
-    //HttpServerThread.detach();
 
     //make call to the known_hosts
     for (auto x : constants->seedPorts) {
@@ -69,6 +63,43 @@ int main(int argc, char* argv[]) {
 
     std::thread loopThread([&P2pServer] {while (true) { std::this_thread::sleep_for(std::chrono::milliseconds(1000));spdlog::info("No of peers connected: {}", P2pServer->peers.size()); };});
     loopThread.detach();
+
+
+    // Http server
+    http::HttpServer* httpServer = new http::HttpServer(AF_INET, SOCK_STREAM, 0 , constants->rootNode["httpDefaultPort"].asInt(), INADDR_ANY, 50);
+
+    // Add handlers
+    httpServer->addHandler("GET", "/api", [](int socket, const atomizes::HTTPMessage &request, Json::Value &json){
+      atomizes::HTTPMessage response;
+      std::map<std::string, std::string> headers;
+      headers.insert(std::make_pair("Content-Type" , "text/plain"));
+      headers.insert(std::make_pair("Connection" , "close"));
+      response.SetStatusCode(200);
+      http::HttpServer::makeResponse(headers, "Hello World BitFab", response);
+      int bytes_sent = send(socket, response.ToString().data(), response.ToString().length(), 0);
+    });
+    httpServer->addHandler("GET", "/", [](int socket, const atomizes::HTTPMessage &request, Json::Value &json){
+      atomizes::HTTPMessage response;
+      std::map<std::string, std::string> headers;
+      headers.insert(std::make_pair("Content-Type" , "text/plain"));
+      headers.insert(std::make_pair("Connection" , "close"));
+      response.SetStatusCode(200);
+      http::HttpServer::makeResponse(headers, "Hello World home", response);
+      int bytes_sent = send(socket, response.ToString().data(), response.ToString().length(), 0);
+    });
+
+    httpServer->addHandler("POST", "/", [](int socket, const atomizes::HTTPMessage &request, Json::Value &json){
+      atomizes::HTTPMessage response;
+      std::map<std::string, std::string> headers;
+      headers.insert(std::make_pair("Content-Type" , "text/plain"));
+      headers.insert(std::make_pair("Connection" , "close"));
+      response.SetStatusCode(200);
+      http::HttpServer::makeResponse(headers, "Hello World post", response);
+      int bytes_sent = send(socket, response.ToString().data(), response.ToString().length(), 0);
+    });
+
+    std::thread HttpServerThread = httpServer->spawnStart();
+    HttpServerThread.detach();
 
     while (1) {
         //do nothing  just stoping the main thread

@@ -35,6 +35,8 @@ void http::HttpServer::start() {
   int listenR = listen(this->socket->getSock(), this->backlog);
   this->socket->testConnection(listenR, "Error while Listening on socket");
 
+  spdlog::info("HTTP listening started");
+
   sockaddr_storage client_addr;
   socklen_t client_addr_size = sizeof(client_addr);
 
@@ -62,11 +64,12 @@ void http::HttpServer::start() {
 void http::HttpServer::incomingRequestHandler(int newSocket) {
   std::thread::id thread_id = std::this_thread::get_id();
   spdlog::info("HTTP incomingRequestHandler thread spwaned");
-  char buffer[4096];
+  int buff_size = 4069;
+  char buffer[buff_size];
 
   while (true) {
-    memset(buffer, 0, sizeof(buffer));
-    int n = read(newSocket, buffer, sizeof(buffer));
+    memset(buffer, 0, buff_size);
+    int n = recv(newSocket, buffer, buff_size, 0);
     if (n < 0) {
       spdlog::error("Error in reading HTTP Request from socket");
       break;
@@ -76,12 +79,52 @@ void http::HttpServer::incomingRequestHandler(int newSocket) {
       break;
     }
 
-    spdlog::info("Message from client : {} - {}", newSocket, buffer);
+    atomizes::HTTPMessage request;
+    atomizes::HTTPMessageParser parser;
+    parser.Parse(&request, buffer);
+    std::string headerPath = request.GetPath();
+    std::string headerMethod = atomizes::MessageMethodToString(request.GetMethod());
 
-    std::string res = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world testing bitfab!";
-    int bytes_sent = send(newSocket, res.data(), res.length(), 0);
-    close(newSocket);
+    spdlog::info("New HTTP request on sock {} for : {} {}", newSocket, headerPath, headerMethod);
+
+    if (this->handlers.count(headerPath + headerMethod)) {
+      Json::Value parsedBody;
+      this->getJsonRequest(request, parsedBody, std::string(buffer));
+      this->handlers[headerPath + headerMethod](newSocket, request, parsedBody);
+    }
+    else {
+      atomizes::HTTPMessage response;
+      std::map<std::string, std::string> headers;
+      headers.insert(std::make_pair("Content-Type" , "text/plain"));
+      headers.insert(std::make_pair("Connection" , "close"));
+      response.SetStatusCode(404);
+      http::HttpServer::makeResponse(headers, "404, No Http handler found", response);
+      int bytes_sent = send(newSocket, response.ToString().data(), response.ToString().length(), 0);
+      spdlog::error("No HTTP handler for {} {}", atomizes::MessageMethodToString(request.GetMethod()), headerPath);
+    }
+    //close(newSocket); //Not closing to keep the connection alive
   }
   close(newSocket);
+  return;
+}
+
+void http::HttpServer::getJsonRequest(atomizes::HTTPMessage& request, Json::Value& json, const std::string& buffer) {
+  std::string str;
+  std::vector<u_int8_t> v = request.GetMessageBody();
+  str.assign(v.begin(), v.end());
+  json = msg::Message::unmarshall(str, 0);
+  return;
+}
+
+void http::HttpServer::makeResponse(std::map<std::string, std::string> headers, std::string body, atomizes::HTTPMessage& response) {
+  for (auto x : headers) {
+    response.SetHeader(x.first, x.second);
+  }
+  response.SetMessageBody(body);
+  return;
+}
+
+void http::HttpServer::addHandler(std::string method, std::string path, http::Handler callback) {
+  this->handlers.insert(std::make_pair(path + method, callback));
   return;
 }

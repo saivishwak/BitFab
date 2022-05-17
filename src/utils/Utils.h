@@ -24,6 +24,13 @@ namespace Utils {
     eDefault
   };
 
+  enum header_methods
+  {
+    eGet,
+    ePost,
+    eNULL
+  };
+
   inline string_code hashit(std::string inString) {
     if (inString == "ping")
       return Utils::ePing;
@@ -38,5 +45,13 @@ namespace Utils {
     if (inString == "newPeer")
       return Utils::eNewPeer;
     return Utils::eDefault;
+  }
+
+  inline header_methods getHeaderValue(std::string inString) {
+    if (inString == "GET")
+      return Utils::eGet;
+    if (inString == "POST")
+      return Utils::ePost;
+    return Utils::eNULL;
   }
 }

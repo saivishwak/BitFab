@@ -63,24 +63,24 @@ std::string msg::Message::marshall(msg::Block body) {
     return fastWriter.write(root);
 }
 
-// msg::Body msg::Message::unmarshall(std::string buffer){
-//     Json::Value root;
-//     Json::Reader reader;
-//     bool parsingSuccessful = reader.parse(buffer, root);
-//     if ( !parsingSuccessful )
-//     {
-//         std::cout << "Error parsing the input" << std::endl;
-//         return msg::Body("Error parsing input", "err");
-//     }
-//     if (root["type"].asString() == "handshake"){
-//         std::vector<int> arr;
-//         for (auto x: root["message"]){
-//             arr.push_back(x.asInt());
-//         }
-//         return msg::Body(arr, root["type"].asString());
-//     }
-//     return msg::Body(root["message"].asString(), root["type"].asString());
-// }
+Json::Value msg::Message::unmarshall(std::string buffer, int type) {
+    Json::Value root;
+    Json::Reader reader;
+    bool parsingSuccessful = reader.parse(buffer, root);
+    if ( !parsingSuccessful )
+    {
+        std::cout << "Error parsing the input" << std::endl;
+        return root;
+    }
+    // if (root["type"].asString() == "handshake"){
+    //     std::vector<int> arr;
+    //     for (auto x: root["message"]){
+    //         arr.push_back(x.asInt());
+    //     }
+    //     return msg::Body(arr, root["type"].asString());
+    // }
+    return root;
+}
 
 msg::Block msg::Message::unmarshall(std::string buffer) {
     PROTO::Block block;

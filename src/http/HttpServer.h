@@ -14,6 +14,7 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <spdlog/spdlog.h>
+#include <json/json.h>
 #include <netinet/in.h>
 #include <map>
 #include <optional>
@@ -21,18 +22,20 @@
 #include "../net/Socket.h"
 #include "../message/Message.hpp"
 #include "../utils/Utils.h"
-//#include "Poco/Net/HTTPRequest.h"
-
+#include "atomizes.hpp"
 
 namespace http {
   /**
    * @brief Class for HTTP Server
    *
    */
+  using Handler = std::function<void(int socket, const atomizes::HTTPMessage &request, Json::Value &json)>;
+
   class HttpServer {
   private:
     net::Socket* socket;
     int backlog;
+    std::map<std::string, Handler> handlers;
 
     /**
      * @brief Private method called internnaly when spawnStart
@@ -56,8 +59,11 @@ namespace http {
      * @return std::thread
      */
     std::thread spawnStart();
+
+    void static makeResponse(std::map<std::string, std::string> headers, std::string body, atomizes::HTTPMessage &response);
+
+    void getJsonRequest(atomizes::HTTPMessage &request, Json::Value &json, const std::string &buffer);
+
+    void addHandler(std::string method, std::string path, Handler callback);
   };
-
-  //typedef std::function<bool(HTTPRequest* req, const std::string&)> HTTPRequestHandler;
-
 }
