@@ -60,10 +60,31 @@ namespace http {
      */
     std::thread spawnStart();
 
+    /**
+     * @brief make a HTTP response
+     * 
+     * @param headers 
+     * @param body 
+     * @param response 
+     */
     void static makeResponse(std::map<std::string, std::string> headers, std::string body, atomizes::HTTPMessage &response);
 
+    /**
+     * @brief Get the Json Request object
+     * 
+     * @param request 
+     * @param json 
+     * @param buffer 
+     */
     void getJsonRequest(atomizes::HTTPMessage &request, Json::Value &json, const std::string &buffer);
 
+    /**
+     * @brief Add HTTP handler
+     * 
+     * @param method 
+     * @param path 
+     * @param callback 
+     */
     void addHandler(std::string method, std::string path, Handler callback);
   };
 }

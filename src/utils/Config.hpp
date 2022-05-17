@@ -1,4 +1,4 @@
-/*
+/**
  * @file Config.hpp
  * @author saivishwak
  * @brief 
@@ -16,7 +16,6 @@
 #include <fstream>
 #include <string>
 #include <json/json.h>
-#include "Logger.hpp"
 #include <spdlog/spdlog.h>
 
 namespace Utils {

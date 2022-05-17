@@ -1,4 +1,4 @@
-/*
+/**
  * @file HttpServer.cpp
  * @author saivishwak
  * @brief
@@ -62,7 +62,7 @@ void http::HttpServer::start() {
 }
 
 
-/*
+/**
  * @brief method to handle incoming request from thread
  * 
  * @param newSocket 
@@ -116,7 +116,7 @@ void http::HttpServer::incomingRequestHandler(int newSocket) {
   return;
 }
 
-/*
+/**
  * @brief parse the incoming JSON request
  * 
  * @param request 
