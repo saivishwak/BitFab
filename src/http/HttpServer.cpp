@@ -61,6 +61,12 @@ void http::HttpServer::start() {
   return;
 }
 
+
+/*
+ * @brief method to handle incoming request from thread
+ * 
+ * @param newSocket 
+ */
 void http::HttpServer::incomingRequestHandler(int newSocket) {
   std::thread::id thread_id = std::this_thread::get_id();
   spdlog::info("HTTP incomingRequestHandler thread spwaned");
@@ -89,7 +95,9 @@ void http::HttpServer::incomingRequestHandler(int newSocket) {
 
     if (this->handlers.count(headerPath + headerMethod)) {
       Json::Value parsedBody;
-      this->getJsonRequest(request, parsedBody, std::string(buffer));
+      if(request.GetHeader("Content-Type") == "application/json"){
+        this->getJsonRequest(request, parsedBody, std::string(buffer));
+      }
       this->handlers[headerPath + headerMethod](newSocket, request, parsedBody);
     }
     else {
@@ -102,12 +110,19 @@ void http::HttpServer::incomingRequestHandler(int newSocket) {
       int bytes_sent = send(newSocket, response.ToString().data(), response.ToString().length(), 0);
       spdlog::error("No HTTP handler for {} {}", atomizes::MessageMethodToString(request.GetMethod()), headerPath);
     }
-    //close(newSocket); //Not closing to keep the connection alive
+    //close(newSocket); //Not closing to keep the connection alive for longer buffers
   }
   close(newSocket);
   return;
 }
 
+/*
+ * @brief parse the incoming JSON request
+ * 
+ * @param request 
+ * @param json 
+ * @param buffer 
+ */
 void http::HttpServer::getJsonRequest(atomizes::HTTPMessage& request, Json::Value& json, const std::string& buffer) {
   std::string str;
   std::vector<u_int8_t> v = request.GetMessageBody();
