@@ -31,3 +31,6 @@ To build initially run:
 To run executable:
     cd ./build/bin
     ./bitfab
+
+
+This project is moved to https://github.com/BitFab-Labs/cplus_p2p
